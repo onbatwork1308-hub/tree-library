@@ -39,6 +39,7 @@ tree-library/
 * C++17 or higher
 * CMake ≥ 3.10
 * GCC / Clang / MSVC
+* User-defined types must support comparison operators.
 
 ---
 
