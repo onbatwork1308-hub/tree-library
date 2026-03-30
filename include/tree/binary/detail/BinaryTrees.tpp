@@ -21,6 +21,13 @@ namespace detail {
     }
 
     template<typename T, typename NodeType>
+    Tree<T, NodeType>::Tree(const Tree& other) : root(nullptr) {
+        if (other.root != nullptr) {
+            this->root = other.root->clone();
+        }
+    }
+
+    template<typename T, typename NodeType>
     Tree<T, NodeType>::~Tree() {
         deleteTree(this->root);
         this->root = nullptr;
@@ -39,6 +46,26 @@ namespace detail {
     void Tree<T, NodeType>::deleteTree() {
         deleteTree(this->root);
         this->root = nullptr;
+    }
+
+    template<typename T, typename NodeType>
+    bool Tree<T, NodeType>::operator==(const Tree& other) const {
+
+        auto same = [&](auto&& self, NodeType* n1, NodeType* n2) -> bool {
+            if (n1 == nullptr && n2 == nullptr) return true;
+            if (n1 == nullptr || n2 == nullptr) return false;
+
+            return (n1->data == n2->data) &&
+                self(self, n1->left, n2->left) &&
+                self(self, n1->right, n2->right);
+        };
+
+        return same(same, this->root, other.root);
+    }
+
+    template<typename T, typename NodeType>
+    bool Tree<T, NodeType>::operator!=(const Tree& other) const {
+        return !(*this == other);
     }
 
     template<typename T, typename NodeType>

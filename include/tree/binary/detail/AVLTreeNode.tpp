@@ -26,4 +26,18 @@ namespace detail {
         int rightHeight = this->right ? this->right->getHeight() : 0;
         return leftHeight - rightHeight;
     }
+
+    template<typename T>
+    AVLTreeNode<T>* AVLTreeNode<T>::clone() const {
+        AVLTreeNode<T>* newNode = new AVLTreeNode<T>(this->data);
+        newNode->setHeight(this->getHeight());
+        if (this->left) {
+            newNode->left = this->left->clone();
+        }
+        if (this->right) {
+            newNode->right = this->right->clone();
+        }
+        return newNode;
+    }
+
 }//namespace detail

@@ -10,6 +10,35 @@ private:
 
 public:
     avl_tree() = default;
+    avl_tree(const avl_tree& other) = default;
+    avl_tree(avl_tree&&) noexcept = default;
+    avl_tree& operator=(avl_tree&&) noexcept = default;
+    avl_tree& operator=(const avl_tree& other) = default;
+
+    avl_tree(const std::vector<T>& values) {
+        *this = values;
+    }
+
+    avl_tree(const std::initializer_list<T>& init_list) {
+        *this = init_list;
+    }
+
+    avl_tree<T>& operator=(const std::vector<T>& values) {
+        impl = values;
+        return *this;
+    }
+
+    avl_tree<T>& operator=(const std::initializer_list<T>& init_list) {
+        return operator=(std::vector<T>(init_list));
+    }
+
+    bool operator==(const avl_tree& other) const {
+        return impl == other.impl;
+    }
+
+    bool operator!=(const avl_tree& other) const {
+        return !(*this == other);
+    }
 
     bool insert(const T& value) {
         return impl.insert(value);
@@ -23,8 +52,31 @@ public:
         return impl.contains(value);
     }
 
+    void clear() {
+        impl.deleteTree();
+    }
+
+    bool empty() const {
+        return this->size() == 0;
+    }
+
     int height() const {
         return impl.getHeight();
+    }
+
+    static avl_tree<T> build_from_sorted(const std::vector<T>& sorted, int start = 0, int end = -1) {
+    avl_tree<T> avl;
+
+    if (sorted.empty()) return avl;
+
+    start = std::max(0, start);
+    end = (end == -1) ? sorted.size() - 1 : std::min((int)sorted.size() - 1, end);
+
+    if (start > end) return avl;
+
+    avl.impl = detail::AVLTree<T>::build_from_sorted(sorted, start, end);
+    return avl;
+
     }
 
     std::vector<T> inorder() const {

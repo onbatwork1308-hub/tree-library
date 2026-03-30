@@ -28,9 +28,11 @@ namespace detail {
     public:
         Tree();
         Tree(NodeType* root);
-        Tree(const Tree& other) = delete;
-        Tree& operator=(const Tree& other) = delete;
+        Tree(const Tree& other);
         ~Tree();
+
+        bool operator==(const Tree& other) const;
+        bool operator!=(const Tree& other) const;
 
         std::vector<T> inorder() const;
         std::vector<T> preorder() const;

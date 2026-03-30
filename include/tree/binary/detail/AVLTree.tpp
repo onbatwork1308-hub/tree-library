@@ -6,6 +6,23 @@ namespace detail {
     AVLTree<T>::AVLTree() {}
 
     template<typename T>
+    AVLTree<T>::AVLTree(const AVLTree& other) {
+        if (this != &other) {
+            this->root = other.root ? other.root->clone() : nullptr;
+        }
+    }
+
+    template<typename T>
+    AVLTree<T>::AVLTree(const std::vector<T>& values) {
+        *this = values;
+    }
+
+    template<typename T>
+    AVLTree<T>::AVLTree(const std::initializer_list<T>& init_list) {
+        *this = init_list;
+    }
+
+    template<typename T>
     AVLTree<T>::~AVLTree() {}
 
     template<typename T>
@@ -16,6 +33,71 @@ namespace detail {
     template<typename T>
     size_t AVLTree<T>::height(const AVLTreeNode<T>* node) const {
         return node ? node->getHeight() : 0;
+    }
+
+    template<typename T>
+    AVLTree<T> AVLTree<T>::build_from_sorted(const std::vector<T>& sorted, int start, int end) {
+        AVLTree<T> avlTree;
+
+        if (sorted.empty()) return avlTree;
+
+        start = std::max(0, start);
+        end = std::min(static_cast<int>(sorted.size()) - 1, end);
+
+        if(start > end) return avlTree;
+
+        auto sortedValues = sorted;
+        sortedValues.erase(
+            std::unique(sortedValues.begin(), sortedValues.end()),
+            sortedValues.end()
+        );
+
+        avlTree.root = build_from_sorted_nodes(sortedValues, start, end);
+        return avlTree;
+    }
+
+    template<typename T>
+    AVLTreeNode<T>* AVLTree<T>::build_from_sorted_nodes(const std::vector<T>& sorted, int start, int end) {
+        if (start > end) return nullptr;
+
+        int mid = start + (end - start) / 2;
+        AVLTreeNode<T>* node = new AVLTreeNode<T>(sorted[mid]);
+
+        node->left = build_from_sorted_nodes(sorted, start, mid - 1);
+        node->right = build_from_sorted_nodes(sorted, mid + 1, end);
+
+        node->setHeight(1 + std::max(height(node->left), height(node->right)));
+        return node;
+    }
+
+    template<typename T>
+    AVLTree<T>& AVLTree<T>::operator=(const std::vector<T>& values) {
+        AVLTree<T> temp;
+
+        std::vector<T> sortedValues = values;
+        std::sort(sortedValues.begin(), sortedValues.end());
+
+        sortedValues.erase(
+            std::unique(sortedValues.begin(), sortedValues.end()),
+            sortedValues.end()
+        );
+
+        temp.root = build_from_sorted_nodes(sortedValues, 0, sortedValues.size() - 1);
+        std::swap(this->root, temp.root);
+        return *this;
+    }
+
+    template<typename T>
+    AVLTree<T>& AVLTree<T>::operator=(const AVLTree<T>& other) {
+        if (this != &other) {
+            this->root = other.root ? other.root->clone() : nullptr;
+        }
+        return *this;
+    }
+
+    template<typename T>
+    AVLTree<T>& AVLTree<T>::operator=(const std::initializer_list<T>& init_list) {
+        return operator=(std::vector<T>(init_list));
     }
 
     template<typename T>

@@ -19,6 +19,7 @@ namespace detail {
 
         AVLTreeNode(const AVLTreeNode& other) = delete;
         AVLTreeNode& operator=(const AVLTreeNode& other) = delete;
+        AVLTreeNode* clone() const override;
 
         size_t getHeight() const;
         int getBalance() const;
