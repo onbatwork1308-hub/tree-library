@@ -20,14 +20,18 @@ A modular, header-only C++ library implementing fundamental tree data structures
 tree-library/
 │
 ├── include/
-│   └── tree/
-│       └── binary/
-│           ├── binary_search_tree.h
-│           ├── avl_tree.h
-│           └── detail/          # internal implementation (not for users)
+│   ├── tree/
+│   │   └── binary/
+│   │       ├── binary_search_tree.h
+│   │       ├── avl_tree.h
+│   │       └── detail/          # internal implementation (not for users)
+│   │
+│   └── set/                    
+│       ├── set.h               
+│       └── set.tpp         
 │
-├── examples/                   # sample usage
-├── CMakeLists.txt             # build configuration
+├── examples/                   
+├── CMakeLists.txt             
 ├── README.md
 └── .gitignore
 ```
@@ -39,7 +43,7 @@ tree-library/
 * C++17 or higher
 * CMake ≥ 3.10
 * GCC / Clang / MSVC
-* User-defined types must support comparison operators.
+* User-defined types must support comparison operators so that they can be stored.
 
 ---
 
@@ -59,7 +63,8 @@ make
 Run the example:
 
 ```bash
-./example
+./tree_example
+./set_example
 ```
 
 ---
